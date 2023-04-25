@@ -28,7 +28,7 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const message = Object.values(err.errors).map((error) => error.message).join('; ');
-        res.status(404).send({ message });
+        res.status(400).send({ message });
       } else res.status(500).send({ message: err.message });
     });
 };
