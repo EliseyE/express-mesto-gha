@@ -32,3 +32,39 @@ module.exports.createUser = (req, res) => {
       } else res.status(500).send({ message: err.message });
     });
 };
+
+module.exports.updateUserInfo = (req, res) => {
+  const userId = req.user._id;
+
+  User.findByIdAndUpdate(
+    userId,
+    { name: req.body.name, about: req.body.about },
+    { new: true, runValidators: true },
+  )
+    .orFail(() => {
+      throw new Error('Not found');
+    })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.message === 'Not found') res.status(404).send({ message: err.message });
+      else res.status(500).send({ message: err.message });
+    });
+};
+
+module.exports.updateUserAvatar = (req, res) => {
+  const userId = req.user._id;
+
+  User.findByIdAndUpdate(
+    userId,
+    { avatar: req.body.avatar },
+    { new: true, runValidators: true },
+  )
+    .orFail(() => {
+      throw new Error('Not found');
+    })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.message === 'Not found') res.status(404).send({ message: err.message });
+      else res.status(500).send({ message: err.message });
+    });
+};
