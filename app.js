@@ -23,6 +23,9 @@ app.use((req, res, next) => {
 
 app.use(usersRouter);
 app.use(cardsRouter);
+app.use('/*', () => {
+  throw new Error({ message: 'Путь не найден' });
+});
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

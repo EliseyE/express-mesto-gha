@@ -2,7 +2,7 @@ const Card = require('../models/card');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send({ cards }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
@@ -11,7 +11,7 @@ module.exports.createCard = (req, res) => {
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
-    .then((card) => res.status(201).send({ data: card }))
+    .then((card) => res.status(201).send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const message = Object.values(err.errors).map((error) => error.message).join('; ');
@@ -27,7 +27,7 @@ module.exports.deleteCard = (req, res) => {
     .orFail(() => {
       throw new Error('Not found');
     })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send({ card }))
     .catch((err) => {
       if (err.message === 'Not found') res.status(404).send({ message: err.message });
       else res.status(500).send({ message: err.message });
@@ -39,7 +39,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   { $addToSet: { likes: req.user._id } },
   { new: true },
 )
-  .then((card) => res.send({ data: card }))
+  .then((card) => res.send({ card }))
   .catch((err) => {
     if (err.message === 'Not found') res.status(404).send({ message: err.message });
     else res.status(500).send({ message: err.message });
@@ -50,7 +50,7 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   { $pull: { likes: req.user._id } },
   { new: true },
 )
-  .then((card) => res.send({ data: card }))
+  .then((card) => res.send({ card }))
   .catch((err) => {
     if (err.message === 'Not found') res.status(404).send({ message: err.message });
     else res.status(500).send({ message: err.message });
