@@ -1,1 +1,1 @@
-module.exports.isURL = /https?:\/\/[a-z0-9-]+\.[\S]*/gi;
+module.exports.isURL = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
