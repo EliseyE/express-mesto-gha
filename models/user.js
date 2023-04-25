@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: [true, 'Required field avatar'],
-    default: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/1084px-Unknown_person.jpg',
     validate: {
       validator(v) { return isURL.test(v); },
       message: 'Incorrect url format',
