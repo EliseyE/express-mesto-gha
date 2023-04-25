@@ -33,3 +33,25 @@ module.exports.deleteCard = (req, res) => {
       else res.status(500).send({ message: err.message });
     });
 };
+
+module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  { $addToSet: { likes: req.user._id } },
+  { new: true },
+)
+  .then((card) => res.send({ data: card }))
+  .catch((err) => {
+    if (err.message === 'Not found') res.status(404).send({ message: err.message });
+    else res.status(500).send({ message: err.message });
+  });
+
+module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  { $pull: { likes: req.user._id } },
+  { new: true },
+)
+  .then((card) => res.send({ data: card }))
+  .catch((err) => {
+    if (err.message === 'Not found') res.status(404).send({ message: err.message });
+    else res.status(500).send({ message: err.message });
+  });
