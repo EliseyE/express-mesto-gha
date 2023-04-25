@@ -1,7 +1,7 @@
-const Users = require('../models/user');
+const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
-  Users.find({})
+  User.find({})
     .then((users) => res.send({ data: users }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
@@ -9,7 +9,7 @@ module.exports.getUsers = (req, res) => {
 module.exports.getUser = (req, res) => {
   const { userId } = req.params;
 
-  Users.findById(userId)
+  User.findById(userId)
     .orFail(() => {
       throw new Error('Not found');
     })
@@ -23,7 +23,7 @@ module.exports.getUser = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
-  Users.create({ name, about, avatar })
+  User.create({ name, about, avatar })
     .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
