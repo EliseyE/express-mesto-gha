@@ -3,7 +3,7 @@ const Card = require('../models/card');
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ cards }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(500).send({ message: err.name }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -14,9 +14,9 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.status(201).send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        const message = Object.values(err.errors).map((error) => error.message).join('; ');
+        const message = Object.values(err.errors).map((error) => error.name).join('; ');
         res.status(400).send({ message });
-      } else res.status(500).send({ message: err.message });
+      } else res.status(500).send({ message: err.name });
     });
 };
 
@@ -29,8 +29,8 @@ module.exports.deleteCard = (req, res) => {
     })
     .then((card) => res.send({ card }))
     .catch((err) => {
-      if (err.message === 'Not found') res.status(404).send({ message: err.message });
-      else res.status(500).send({ message: err.message });
+      if (err.name === 'Not found') res.status(404).send({ message: err.name });
+      else res.status(500).send({ message: err.name });
     });
 };
 
@@ -41,8 +41,8 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => res.send({ card }))
   .catch((err) => {
-    if (err.message === 'Not found') res.status(400).send({ message: err.message });
-    else res.status(500).send({ message: err.message });
+    if (err.name === 'Not found') res.status(400).send({ message: err.name });
+    else res.status(500).send({ message: err.name });
   });
 
 module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
@@ -52,6 +52,6 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => res.send({ card }))
   .catch((err) => {
-    if (err.message === 'Not found') res.status(404).send({ message: err.message });
-    else res.status(500).send({ message: err.message });
+    if (err.name === 'Not found') res.status(404).send({ message: err.name });
+    else res.status(500).send({ message: err.name });
   });
