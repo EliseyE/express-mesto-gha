@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const isURL = require('../utils/utils');
+const { isURL } = require('../utils/utils');
 
 const cardSchema = new mongoose.Schema({
   name: {
