@@ -2,8 +2,14 @@ const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
+    .orFail(() => {
+      throw new Error('Not found');
+    })
     .then((users) => res.send({ users }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.message === 'Not found') res.status(400).send({ message: err.message });
+      else res.status(500).send({ message: err.message });
+    });
 };
 
 module.exports.getUser = (req, res) => {
@@ -15,7 +21,7 @@ module.exports.getUser = (req, res) => {
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.message === 'Not found') res.status(404).send({ message: err.message });
+      if (err.message === 'Not found') res.status(400).send({ message: err.message });
       else res.status(500).send({ message: err.message });
     });
 };
@@ -46,7 +52,7 @@ module.exports.updateUserInfo = (req, res) => {
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.message === 'Not found') res.status(404).send({ message: err.message });
+      if (err.message === 'Not found') res.status(400).send({ message: err.message });
       else res.status(500).send({ message: err.message });
     });
 };
