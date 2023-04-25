@@ -41,7 +41,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => res.send({ card }))
   .catch((err) => {
-    if (err.message === 'Not found') res.status(404).send({ message: err.message });
+    if (err.message === 'Not found') res.status(400).send({ message: err.message });
     else res.status(500).send({ message: err.message });
   });
 

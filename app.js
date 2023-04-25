@@ -23,8 +23,8 @@ app.use((req, res, next) => {
 
 app.use(usersRouter);
 app.use(cardsRouter);
-app.use('/*', () => {
-  throw new Error({ message: 'Путь не найден' });
+app.use('/*', (req, res) => {
+  res.status(500).send({ message: 'Path not found' });
 });
 
 app.listen(PORT, () => {
