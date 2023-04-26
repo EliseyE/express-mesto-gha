@@ -13,7 +13,7 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, link, owner })
     .then((card) => res.status(201).send({ card }))
     .catch((err) => {
-      if (err.message === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         const message = Object.values(err.errors).map((error) => error.name).join('; ');
         res.status(400).send({ message });
       } else res.status(500).send({ message: err.name });
@@ -25,11 +25,11 @@ module.exports.deleteCard = (req, res) => {
 
   Card.findByIdAndRemove(cardId)
     .orFail(() => {
-      throw new Error('Not found');
+      throw new Error();
     })
     .then((card) => res.send({ card }))
     .catch((err) => {
-      if (err.message === 'Not found') res.status(404).send({ message: err.name });
+      if (err.name === 'CastError') res.status(404).send({ message: err.name });
       else res.status(500).send({ message: err.name });
     });
 };
@@ -41,7 +41,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => res.send({ card }))
   .catch((err) => {
-    if (err.message === 'Not found') res.status(400).send({ message: err.name });
+    if (err.name === 'CastError') res.status(404).send({ message: err.name });
     else res.status(500).send({ message: err.name });
   });
 
@@ -52,6 +52,6 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => res.send({ card }))
   .catch((err) => {
-    if (err.message === 'Not found') res.status(404).send({ message: err.name });
+    if (err.name === 'CastError') res.status(404).send({ message: err.name });
     else res.status(500).send({ message: err.name });
   });

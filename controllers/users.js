@@ -3,11 +3,11 @@ const User = require('../models/user');
 module.exports.getUsers = (req, res) => {
   User.find({})
     .orFail(() => {
-      throw new Error('Not found');
+      throw new Error();
     })
     .then((users) => res.send({ users }))
     .catch((err) => {
-      if (err.message === 'Not found') res.status(400).send({ message: err.name });
+      if (err.name === 'CastError') res.status(404).send({ message: err.name });
       else res.status(500).send({ message: err.message });
     });
 };
@@ -17,11 +17,11 @@ module.exports.getUser = (req, res) => {
 
   User.findById(userId)
     .orFail(() => {
-      throw new Error('Not found');
+      throw new Error();
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.message === 'Not found') res.status(400).send({ message: err.name });
+      if (err.name === 'CastError') res.status(404).send({ message: err.name, test: 'test' });
       else res.status(500).send({ message: err.name });
     });
 };
@@ -32,7 +32,7 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(201).send({ user }))
     .catch((err) => {
-      if (err.message === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         const message = Object.values(err.errors).map((error) => error.name).join('; ');
         res.status(400).send({ message });
       } else res.status(500).send({ message: err.name });
@@ -48,11 +48,11 @@ module.exports.updateUserInfo = (req, res) => {
     { new: true, runValidators: true },
   )
     .orFail(() => {
-      throw new Error('Not found');
+      throw new Error();
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.message === 'Not found') res.status(400).send({ message: err.name });
+      if (err.name === 'CastError') res.status(404).send({ message: err.name });
       else res.status(500).send({ message: err.name });
     });
 };
@@ -66,11 +66,11 @@ module.exports.updateUserAvatar = (req, res) => {
     { new: true, runValidators: true },
   )
     .orFail(() => {
-      throw new Error('Not found');
+      throw new Error();
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.message === 'Not found') res.status(404).send({ message: err.name });
+      if (err.name === 'CastError') res.status(404).send({ message: err.name });
       else res.status(500).send({ message: err.name });
     });
 };
