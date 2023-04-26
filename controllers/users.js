@@ -47,7 +47,10 @@ module.exports.updateUserInfo = (req, res) => {
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        const message = Object.values(err.errors).map((error) => error.name).join('; ');
+        res.status(400).send({ message });
+      } else if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
       else if (err.name === 'CastError') res.status(400).send({ message: err.message });
       else res.status(500).send({ message: err.message });
     });
