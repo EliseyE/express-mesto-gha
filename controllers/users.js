@@ -12,13 +12,11 @@ module.exports.getUser = (req, res) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .orFail(() => {
-      throw new Error();
-    })
+    .orFail()
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.reason.name === 'BSONError') res.status(400).send({ message: err.message });
-      if (err.name === 'CastError') res.status(404).send({ message: err.message });
+      if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
+      else if (err.name === 'CastError') res.status(400).send({ message: err.message });
       else res.status(500).send({ message: err.message });
     });
 };
@@ -49,8 +47,8 @@ module.exports.updateUserInfo = (req, res) => {
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.reason.name === 'BSONError') res.status(400).send({ message: err.message });
-      if (err.name === 'CastError') res.status(404).send({ message: err.message });
+      if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
+      else if (err.name === 'CastError') res.status(400).send({ message: err.message });
       else res.status(500).send({ message: err.message });
     });
 };
@@ -68,8 +66,8 @@ module.exports.updateUserAvatar = (req, res) => {
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.reason.name === 'BSONError') res.status(400).send({ message: err.message });
-      if (err.name === 'CastError') res.status(404).send({ message: err.message });
+      if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
+      else if (err.name === 'CastError') res.status(400).send({ message: err.message });
       else res.status(500).send({ message: err.message });
     });
 };

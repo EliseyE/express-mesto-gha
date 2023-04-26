@@ -29,9 +29,9 @@ module.exports.deleteCard = (req, res) => {
     })
     .then((card) => res.send({ card }))
     .catch((err) => {
-      if (err.reason.name === 'BSONError') res.status(400).send({ message: err.message });
-      if (err.name === 'CastError') res.status(404).send({ message: err.name });
-      else res.status(500).send({ message: err.name });
+      if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
+      else if (err.name === 'CastError') res.status(400).send({ message: err.message });
+      else res.status(500).send({ message: err.message });
     });
 };
 
@@ -42,9 +42,9 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => res.send({ card }))
   .catch((err) => {
-    if (err.reason.name === 'BSONError') res.status(400).send({ message: err.message });
-    if (err.name === 'CastError') res.status(404).send({ message: err.name });
-    else res.status(500).send({ message: err.name });
+    if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
+    else if (err.name === 'CastError') res.status(400).send({ message: err.message });
+    else res.status(500).send({ message: err.message });
   });
 
 module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
@@ -54,7 +54,7 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => res.send({ card }))
   .catch((err) => {
-    if (err.reason.name === 'BSONError') res.status(400).send({ message: err.message });
-    if (err.name === 'CastError') res.status(404).send({ message: err.name });
-    else res.status(500).send({ message: err.name });
+    if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
+    else if (err.name === 'CastError') res.status(400).send({ message: err.message });
+    else res.status(500).send({ message: err.message });
   });
