@@ -24,9 +24,7 @@ module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
 
   Card.findByIdAndRemove(cardId)
-    .orFail(() => {
-      throw new Error();
-    })
+    .orFail()
     .then((card) => res.send({ card }))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
@@ -40,6 +38,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   { $addToSet: { likes: req.user._id } },
   { new: true },
 )
+  .orFail()
   .then((card) => res.send({ card }))
   .catch((err) => {
     if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
@@ -52,6 +51,7 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   { $pull: { likes: req.user._id } },
   { new: true },
 )
+  .orFail()
   .then((card) => res.send({ card }))
   .catch((err) => {
     if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
