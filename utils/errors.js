@@ -12,11 +12,11 @@ module.exports.errorHeandler = (err, res) => {
       break;
     }
     case 'CastError': {
-      res.status(NOT_FOUND_CODE).send({ message: err.message });
+      res.status(BAD_REQUEST_CODE).send({ message: err.message });
       break;
     }
     case 'DocumentNotFoundError': {
-      res.status(BAD_REQUEST_CODE).send({ message: err.message });
+      res.status(NOT_FOUND_CODE).send({ message: err.message });
       break;
     }
     default:
