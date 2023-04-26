@@ -29,7 +29,7 @@ module.exports.deleteCard = (req, res) => {
     })
     .then((card) => res.send({ card }))
     .catch((err) => {
-      if (err.name === 'BSONError') res.status(400).send({ message: err.message });
+      if (err.reason.name === 'BSONError') res.status(400).send({ message: err.message });
       if (err.name === 'CastError') res.status(404).send({ message: err.name });
       else res.status(500).send({ message: err.name });
     });
@@ -42,7 +42,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => res.send({ card }))
   .catch((err) => {
-    if (err.name === 'BSONError') res.status(400).send({ message: err.message });
+    if (err.reason.name === 'BSONError') res.status(400).send({ message: err.message });
     if (err.name === 'CastError') res.status(404).send({ message: err.name });
     else res.status(500).send({ message: err.name });
   });
@@ -54,7 +54,7 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => res.send({ card }))
   .catch((err) => {
-    if (err.name === 'BSONError') res.status(400).send({ message: err.message });
+    if (err.reason.name === 'BSONError') res.status(400).send({ message: err.message });
     if (err.name === 'CastError') res.status(404).send({ message: err.name });
     else res.status(500).send({ message: err.name });
   });
