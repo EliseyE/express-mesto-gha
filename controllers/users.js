@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const errorHeandler = require('../utils/errors');
+const { errorHeandler } = require('../utils/errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
