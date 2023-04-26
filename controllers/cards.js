@@ -1,9 +1,10 @@
 const Card = require('../models/card');
+const errorHeandler = require('../utils/errors');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ cards }))
-    .catch((err) => res.status(500).send({ message: err.name }));
+    .catch((err) => { errorHeandler(err, res); });
 };
 
 module.exports.createCard = (req, res) => {
@@ -12,12 +13,7 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner })
     .then((card) => res.status(201).send({ card }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        const message = Object.values(err.errors).map((error) => error.name).join('; ');
-        res.status(400).send({ message });
-      } else res.status(500).send({ message: err.name });
-    });
+    .catch((err) => { errorHeandler(err, res); });
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -26,11 +22,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(cardId)
     .orFail()
     .then((card) => res.send({ card }))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
-      else if (err.name === 'CastError') res.status(400).send({ message: err.message });
-      else res.status(500).send({ message: err.message });
-    });
+    .catch((err) => { errorHeandler(err, res); });
 };
 
 module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
@@ -40,11 +32,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .orFail()
   .then((card) => res.send({ card }))
-  .catch((err) => {
-    if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
-    else if (err.name === 'CastError') res.status(400).send({ message: err.message });
-    else res.status(500).send({ message: err.message });
-  });
+  .catch((err) => { errorHeandler(err, res); });
 
 module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.cardId,
@@ -53,8 +41,4 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .orFail()
   .then((card) => res.send({ card }))
-  .catch((err) => {
-    if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
-    else if (err.name === 'CastError') res.status(400).send({ message: err.message });
-    else res.status(500).send({ message: err.message });
-  });
+  .catch((err) => { errorHeandler(err, res); });

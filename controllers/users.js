@@ -1,11 +1,10 @@
 const User = require('../models/user');
+const errorHeandler = require('../utils/errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ users }))
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
+    .catch((err) => { errorHeandler(err, res); });
 };
 
 module.exports.getUser = (req, res) => {
@@ -14,11 +13,7 @@ module.exports.getUser = (req, res) => {
   User.findById(userId)
     .orFail()
     .then((user) => res.send({ user }))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
-      else if (err.name === 'CastError') res.status(400).send({ message: err.message });
-      else res.status(500).send({ message: err.message });
-    });
+    .catch((err) => { errorHeandler(err, res); });
 };
 
 module.exports.createUser = (req, res) => {
@@ -26,12 +21,7 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.status(201).send({ user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        const message = Object.values(err.errors).map((error) => error.name).join('; ');
-        res.status(400).send({ message });
-      } else res.status(500).send({ message: err.message });
-    });
+    .catch((err) => { errorHeandler(err, res); });
 };
 
 module.exports.updateUserInfo = (req, res) => {
@@ -46,14 +36,7 @@ module.exports.updateUserInfo = (req, res) => {
       throw new Error();
     })
     .then((user) => res.send({ user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        const message = Object.values(err.errors).map((error) => error.name).join('; ');
-        res.status(400).send({ message });
-      } else if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
-      else if (err.name === 'CastError') res.status(400).send({ message: err.message });
-      else res.status(500).send({ message: err.message });
-    });
+    .catch((err) => { errorHeandler(err, res); });
 };
 
 module.exports.updateUserAvatar = (req, res) => {
@@ -68,9 +51,5 @@ module.exports.updateUserAvatar = (req, res) => {
       throw new Error();
     })
     .then((user) => res.send({ user }))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') res.status(404).send({ message: err.message });
-      else if (err.name === 'CastError') res.status(400).send({ message: err.message });
-      else res.status(500).send({ message: err.message });
-    });
+    .catch((err) => { errorHeandler(err, res); });
 };
