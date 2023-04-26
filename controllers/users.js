@@ -2,13 +2,9 @@ const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .orFail(() => {
-      throw new Error();
-    })
     .then((users) => res.send({ users }))
     .catch((err) => {
-      if (err.name === 'CastError') res.status(404).send({ message: err.name });
-      else res.status(500).send({ message: err.message });
+      res.status(500).send({ message: err.message });
     });
 };
 
@@ -21,8 +17,9 @@ module.exports.getUser = (req, res) => {
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.name === 'CastError') res.status(404).send({ message: err.name, test: 'test' });
-      else res.status(500).send({ message: err.name });
+      if (err.name === 'BSONError') res.status(400).send({ message: err.message });
+      if (err.reason.name === 'CastError') res.status(404).send({ message: err.message });
+      else res.status(500).send({ message: err.message });
     });
 };
 
@@ -35,7 +32,7 @@ module.exports.createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         const message = Object.values(err.errors).map((error) => error.name).join('; ');
         res.status(400).send({ message });
-      } else res.status(500).send({ message: err.name });
+      } else res.status(500).send({ message: err.message });
     });
 };
 
@@ -52,8 +49,9 @@ module.exports.updateUserInfo = (req, res) => {
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.name === 'CastError') res.status(404).send({ message: err.name });
-      else res.status(500).send({ message: err.name });
+      if (err.name === 'BSONError') res.status(400).send({ message: err.message });
+      if (err.name === 'CastError') res.status(404).send({ message: err.message });
+      else res.status(500).send({ message: err.message });
     });
 };
 
@@ -70,7 +68,8 @@ module.exports.updateUserAvatar = (req, res) => {
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.name === 'CastError') res.status(404).send({ message: err.name });
-      else res.status(500).send({ message: err.name });
+      if (err.name === 'BSONError') res.status(400).send({ message: err.message });
+      if (err.name === 'CastError') res.status(404).send({ message: err.message });
+      else res.status(500).send({ message: err.message });
     });
 };
