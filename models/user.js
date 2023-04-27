@@ -22,6 +22,8 @@ const userSchema = new mongoose.Schema({
       message: 'Incorrect url format',
     },
   },
-});
+},
+{ versionKey: false },
+);
 
 module.exports = mongoose.model('user', userSchema);
