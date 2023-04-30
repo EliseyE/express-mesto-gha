@@ -18,10 +18,15 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
+  const { userId } = req.user._id;
 
   Card.findByIdAndRemove(cardId)
     .orFail()
-    .then((card) => res.send({ card }))
+    // eslint-disable-next-line consistent-return
+    .then((card) => {
+      if (userId !== card.owner) return Promise.reject(new Error('Access denied'));
+      res.send({ card });
+    })
     .catch((err) => { errorHeandler(err, res); });
 };
 

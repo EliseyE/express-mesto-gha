@@ -73,3 +73,12 @@ module.exports.login = (req, res) => {
     })
     .catch((err) => { errorHeandler(err, res); });
 };
+
+module.exports.getCurrentUserInfo = (req, res) => {
+  const { _id } = req.body;
+
+  User.findById(_id)
+    .orFail()
+    .then((user) => res.send({ user }))
+    .catch((err) => { errorHeandler(err, res); });
+};
