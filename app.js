@@ -4,20 +4,17 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 
 const {
   INTERNAL_SERVER_ERROR,
 } = require('./errors/error-codes');
 
-const {
-  URL_REG_EXP,
-} = require('./utils/constants');
-
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const { login, createUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
+const signinRouter = require('./routes/signin');
+const signupRouter = require('./routes/signup');
+const { auth } = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -32,26 +29,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(URL_REG_EXP),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), createUser);
-
-app.use('/users', usersRouter);
-
-app.use('/cards', cardsRouter);
+app.use('/signin', signinRouter);
+app.use('/signup', signupRouter);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
 
 app.use('/*', (req, res) => {
   res.status(404).send({ message: 'Path not found' });

@@ -1,23 +1,22 @@
-const { checkToken } = require('../utils/token');
+require('dotenv').config();
+const JWT = require('jsonwebtoken');
+
+const { JWT_SECRET } = process.env;
 
 // eslint-disable-next-line consistent-return
 module.exports.auth = (req, res, next) => {
   const token = req.cookies.jwt;
-  const checkResult = checkToken(token);
 
-  if (!checkResult) return res.status(401).json({ error: 'Access denied' });
+  if (!token) return res.status(401).send({ message: 'Authorization required' });
 
-  req.user = { _id: '111111111122222222223333' };
+  let payload;
+
+  try {
+    payload = JWT.verify(token, JWT_SECRET);
+  } catch (err) {
+    return res.status(401).send({ message: 'Authorization required' });
+  }
+
+  req.user = payload;
   next();
 };
-
-
-// function checkToken(token) {
-//   if (!token) return false;
-
-//   try {
-//     return JWT.verify(token, JWT_SECRET);
-//   } catch {
-//     return false;
-//   }
-// }

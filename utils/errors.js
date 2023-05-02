@@ -20,7 +20,11 @@ module.exports.errorHeandler = (err, res) => {
       break;
     }
     case 'MongoServerError': {
-      res.status(409).send({ message: err.message });
+      if (err.code === 11000) {
+        res.status(409).send({ message: err.message });
+        break;
+      }
+      res.status(500).send({ message: err.message });
       break;
     }
     default:

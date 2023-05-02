@@ -3,8 +3,6 @@ const User = require('../models/user');
 const { errorHeandler } = require('../utils/errors');
 const { generateToken } = require('../utils/token');
 
-const { JWT_SECRET } = process.env;
-
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ users }))
