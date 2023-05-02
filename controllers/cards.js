@@ -3,7 +3,7 @@ const { errorHeandler } = require('../utils/errors');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send({ cards }))
+    .then((cards) => res.json({ cards }))
     .catch((err) => { errorHeandler(err, res); });
 };
 
@@ -12,7 +12,7 @@ module.exports.createCard = (req, res) => {
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
-    .then((card) => res.status(201).send({ card }))
+    .then((card) => res.status(201).json({ card }))
     .catch((err) => { errorHeandler(err, res); });
 };
 
@@ -25,7 +25,7 @@ module.exports.deleteCard = (req, res) => {
     // eslint-disable-next-line consistent-return
     .then((card) => {
       if (userId !== card.owner) return Promise.reject(new Error('Access denied'));
-      res.send({ card });
+      res.json({ card });
     })
     .catch((err) => { errorHeandler(err, res); });
 };
@@ -36,7 +36,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   { new: true },
 )
   .orFail()
-  .then((card) => res.send({ card }))
+  .then((card) => res.json({ card }))
   .catch((err) => { errorHeandler(err, res); });
 
 module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
@@ -45,5 +45,5 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   { new: true },
 )
   .orFail()
-  .then((card) => res.send({ card }))
+  .then((card) => res.json({ card }))
   .catch((err) => { errorHeandler(err, res); });

@@ -35,7 +35,7 @@ app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 
 app.use('/*', (req, res) => {
-  res.status(404).send({ message: 'Path not found' });
+  res.status(404).json({ message: 'Path not found' });
 });
 
 app.use(errors());

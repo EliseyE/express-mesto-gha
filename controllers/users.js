@@ -5,7 +5,7 @@ const { generateToken } = require('../utils/token');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.send({ users }))
+    .then((users) => res.json({ users }))
     .catch((err) => { errorHeandler(err, res); });
 };
 
@@ -14,7 +14,7 @@ module.exports.getUser = (req, res) => {
 
   User.findById(userId)
     .orFail()
-    .then((user) => res.send({ user }))
+    .then((user) => res.json({ user }))
     .catch((err) => { errorHeandler(err, res); });
 };
 
@@ -27,7 +27,7 @@ module.exports.createUser = (req, res) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.status(201).send({ user }))
+    .then((user) => res.status(201).json({ user }))
     .catch((err) => { errorHeandler(err, res); });
 };
 
@@ -42,7 +42,7 @@ module.exports.updateUserInfo = (req, res) => {
     .orFail(() => {
       throw new Error();
     })
-    .then((user) => res.send({ user }))
+    .then((user) => res.json({ user }))
     .catch((err) => { errorHeandler(err, res); });
 };
 
@@ -57,7 +57,7 @@ module.exports.updateUserAvatar = (req, res) => {
     .orFail(() => {
       throw new Error();
     })
-    .then((user) => res.send({ user }))
+    .then((user) => res.json({ user }))
     .catch((err) => { errorHeandler(err, res); });
 };
 
@@ -88,6 +88,6 @@ module.exports.getCurrentUserInfo = (req, res) => {
 
   User.findById(_id)
     .orFail()
-    .then((user) => res.send({ user }))
+    .then((user) => res.json({ user }))
     .catch((err) => { errorHeandler(err, res); });
 };
