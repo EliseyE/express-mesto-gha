@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { isURL } = require('../utils/utils');
+const { isURL } = require('validator');
 
 const cardSchema = new mongoose.Schema(
   {
@@ -13,7 +13,7 @@ const cardSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Required field link'],
       validate: {
-        validator(v) { return isURL.test(v); },
+        validator(v) { return isURL(v); },
         message: 'Incorrect url format',
       },
     },

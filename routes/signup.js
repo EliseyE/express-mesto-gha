@@ -14,7 +14,7 @@ signupRouter.post('/', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(URL_REG_EXP),
     email: Joi.string().required().email(),
-    password: Joi.string().required(),
+    password: Joi.string().required().min(4).max(30),
   }),
 }), createUser);
 

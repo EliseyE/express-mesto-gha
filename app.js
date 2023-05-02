@@ -6,15 +6,12 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 
-const {
-  INTERNAL_SERVER_ERROR,
-} = require('./errors/error-codes');
-
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const signinRouter = require('./routes/signin');
 const signupRouter = require('./routes/signup');
 const { auth } = require('./middlewares/auth');
+const centralErrorUnit = require('./errors/centralErrorUnit');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -39,15 +36,9 @@ app.use('/*', (req, res) => {
 });
 
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  const { statusCode = INTERNAL_SERVER_ERROR, message } = err;
-
-  res.status(statusCode).json({ message: statusCode === 500 ? 'Internal Server Error' : message });
-  next();
-});
+app.use(centralErrorUnit);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`App listening on port ${PORT}`);
+  console.log(`App are listening on port ${PORT}`);
 });
