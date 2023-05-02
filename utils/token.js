@@ -1,4 +1,5 @@
 const JWT = require('jsonwebtoken');
+require('dotenv').config();
 
 const { JWT_SECRET } = process.env;
 
@@ -20,3 +21,9 @@ module.exports = {
   generateToken,
   checkToken,
 };
+
+// celebrate({
+//   cookies: Joi.object().keys({
+//     token: Joi.string().token(),
+//   }),
+// }),

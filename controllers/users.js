@@ -1,6 +1,9 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { errorHeandler } = require('../utils/errors');
 const { generateToken } = require('../utils/token');
+
+const { JWT_SECRET } = process.env;
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -22,9 +25,10 @@ module.exports.createUser = (req, res) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  User.create({
-    name, about, avatar, email, password,
-  })
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then((user) => res.status(201).send({ user }))
     .catch((err) => { errorHeandler(err, res); });
 };
@@ -65,11 +69,18 @@ module.exports.login = (req, res) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = generateToken({ _id: user._id }, '12h');
+
       res.cookie('jwt', token, {
-        maxAge: 12 * 60 * 60 * 1000,
+        maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
       })
-        .end();
+        .send({
+          name: user.name,
+          avatar: user.avatar,
+          about: user.about,
+          email: user.email,
+          _id: user._id,
+        });
     })
     .catch((err) => { errorHeandler(err, res); });
 };

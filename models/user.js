@@ -18,26 +18,27 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
+      default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
       validate: {
         validator(v) { return isURL(v); },
-        message: 'Incorrect url format',
-        default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+        message: (props) => `Incorrect url format: ${props.value}`,
       },
-      email: {
-        type: String,
-        required: [true, 'Required field email'],
-        unique: true,
-        validate: {
-          validator(v) { return isEmail(v); },
-          message: 'Incorrect url format',
-        },
+    },
+    email: {
+      type: String,
+      unique: [true, 'User with such an email already exists'],
+      required: [true, 'Required field email'],
+      lowercase: true,
+      validate: {
+        validator(v) { return isEmail(v); },
+        message: (props) => `Incorrect email format: ${props.value}`,
       },
-      password: {
-        type: String,
-        required: [true, 'Required field password'],
-        minlength: [4, 'Min length is 4 symbols. Current data is less than 4 symbols'],
-        select: false,
-      },
+    },
+    password: {
+      type: String,
+      required: [true, 'Required field password'],
+      minlength: [4, 'Min length is 4 symbols. Current data is less than 4 symbols'],
+      select: false,
     },
   },
   { versionKey: false },

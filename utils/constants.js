@@ -1,9 +1,6 @@
-const BAD_REQUEST_CODE = 400;
-const NOT_FOUND_CODE = 404;
-const SERVER_ERROR_CODE = 500;
+// eslint-disable-next-line no-useless-escape
+const URL_REG_EXP = /https?:\/\/(w{3}\.)?([a-z0-9\-]+)(\.[a-z0-9\-]{2,10})+\S*#?/i;
 
 module.exports = {
-  BAD_REQUEST_CODE,
-  NOT_FOUND_CODE,
-  SERVER_ERROR_CODE,
+  URL_REG_EXP,
 };
