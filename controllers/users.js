@@ -96,7 +96,7 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.getCurrentUserInfo = (req, res, next) => {
-  const { _id } = req.body;
+  const { _id } = req.user;
 
   User.findById(_id)
     .orFail()

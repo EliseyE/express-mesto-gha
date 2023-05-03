@@ -1,5 +1,6 @@
 const Card = require('../models/card');
 const { errorHeandler } = require('../errors/errorHeandler');
+const { ForbiddenError } = require('../errors/forbidden-error');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -20,13 +21,13 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  const { userId } = req.user._id;
+  const userId = req.user._id;
 
   Card.findByIdAndRemove(cardId)
     .orFail()
     // eslint-disable-next-line consistent-return
     .then((card) => {
-      if (userId !== card.owner) return Promise.reject(new Error('Access denied'));
+      if (userId !== card.owner) return Promise.reject(new ForbiddenError('Access denied'));
       res.json({ card });
     })
     .catch((err) => { errorHeandler(err, res); })
