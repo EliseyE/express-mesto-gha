@@ -4,8 +4,6 @@ const ConflictError = require('./conflict-error');
 const InternalServerError = require('./internal-server-error');
 
 module.exports.errorHeandler = (err) => {
-  console.log(err.statusCode);
-
   if ((err.statusCode >= 400) && (err.statusCode <= 599)) {
     return err;
   }
