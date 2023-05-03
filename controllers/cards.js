@@ -24,16 +24,12 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(cardId)
     .orFail()
     .then((card) => {
-      if (userId !== card.owner.toString()) {
-        throw new ForbiddenError('Access denied');
-      }
-
-      Card.findByIdAndRemove(cardId)
-        .orFail()
-        .then((cardToDel) => {
-          res.json({ cardToDel });
-        })
-        .catch(next);
+      if (userId !== card.owner.toString()) throw new ForbiddenError('Access denied');
+      card.deleteOne({ _id: cardId });
+      return card;
+    })
+    .then((card) => {
+      res.json({ card, message: 'The card has been deleted' });
     })
     .catch((err) => { next(errorHeandler(err)); });
 };
