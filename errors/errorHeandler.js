@@ -4,6 +4,8 @@ const ConflictError = require('./conflict-error');
 const InternalServerError = require('./internal-server-error');
 
 module.exports.errorHeandler = (err) => {
+  console.log(err.statusCode);
+
   if ((err.statusCode >= 400) && (err.statusCode <= 599)) {
     return err;
   }
@@ -11,21 +13,21 @@ module.exports.errorHeandler = (err) => {
   switch (err.name) {
     case 'ValidationError': {
       const validationErrors = Object.values(err.errors).map((error) => error.name).join('; ');
-      return new BadRequestError({ message: 'Validation Error', validationErrors });
+      return new BadRequestError(`Validation Error: ${validationErrors}`);
     }
     case 'CastError': {
-      return new BadRequestError({ message: err.message });
+      return new BadRequestError(err.message);
     }
     case 'DocumentNotFoundError': {
       return new NotFoundError(`DocumentNotFoundError: ${err.message}`);
     }
     case 'MongoServerError': {
       if (err.code === 11000) {
-        return new ConflictError({ message: err.message });
+        return new ConflictError(err.message);
       }
-      return new InternalServerError({ message: err.message });
+      return new InternalServerError(err.message);
     }
     default:
-      return new InternalServerError({ message: err.message });
+      return new InternalServerError(err.message);
   }
 };
