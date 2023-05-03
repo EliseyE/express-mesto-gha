@@ -45,9 +45,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     { name: req.body.name, about: req.body.about },
     { new: true, runValidators: true },
   )
-    .orFail(() => {
-      throw new Error();
-    })
+    .orFail()
     .then((user) => res.json({ user }))
     .catch((err) => { next(errorHeandler(err)); });
 };
@@ -60,9 +58,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     { avatar: req.body.avatar },
     { new: true, runValidators: true },
   )
-    .orFail(() => {
-      throw new Error();
-    })
+    .orFail()
     .then((user) => res.json({ user }))
     .catch((err) => { next(errorHeandler(err)); });
 };
