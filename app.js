@@ -12,6 +12,7 @@ const signinRouter = require('./routes/signin');
 const signupRouter = require('./routes/signup');
 const { auth } = require('./middlewares/auth');
 const centralErrorUnit = require('./errors/centralErrorUnit');
+const NotFoundError = require('./errors/not-found-error');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -31,8 +32,8 @@ app.use('/signup', signupRouter);
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 
-app.use('/*', (req, res) => {
-  res.status(404).json({ message: 'Path not found' });
+app.use('/*', (req, res, next) => {
+  next(new NotFoundError('Path not found'));
 });
 
 app.use(errors());
