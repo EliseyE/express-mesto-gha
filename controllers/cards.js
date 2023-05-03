@@ -24,7 +24,6 @@ module.exports.deleteCard = (req, res, next) => {
   const userId = req.user._id;
 
   Card.findById(cardId)
-    .populate(['owner', 'likes'])
     .orFail()
     .then((card) => {
       if (userId !== card.owner.toString()) throw new ForbiddenError('Access denied');
