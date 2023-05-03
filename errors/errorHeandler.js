@@ -1,10 +1,9 @@
 const BadRequestError = require('./bad-request-error');
 const NotFoundError = require('./not-found-error');
 const ConflictError = require('./conflict-error');
-const InternalServerError = require('./internal-server-error');
 
 module.exports.errorHeandler = (err) => {
-  if ((err.statusCode >= 400) && (err.statusCode <= 599)) {
+  if (err.statusCode) {
     return err;
   }
 
@@ -23,9 +22,9 @@ module.exports.errorHeandler = (err) => {
       if (err.code === 11000) {
         return new ConflictError(err.message);
       }
-      return new InternalServerError(err.message);
+      return err;
     }
     default:
-      return new InternalServerError(err.message);
+      return err;
   }
 };
