@@ -1,15 +1,13 @@
 const signinRouter = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+
+const {
+  JOI_PRESETS,
+} = require('../appConfig');
 
 const {
   login,
 } = require('../controllers/users');
 
-signinRouter.post('/', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(4).max(30),
-  }),
-}), login);
+signinRouter.post('/', JOI_PRESETS.login, login);
 
 module.exports = signinRouter;
