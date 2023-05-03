@@ -6,8 +6,7 @@ const { generateToken } = require('../utils/token');
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.json({ users }))
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };
 
 module.exports.getUser = (req, res, next) => {
@@ -16,8 +15,7 @@ module.exports.getUser = (req, res, next) => {
   User.findById(userId)
     .orFail()
     .then((user) => res.json({ user }))
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -36,8 +34,7 @@ module.exports.createUser = (req, res, next) => {
       email: user.email,
       _id: user._id,
     }))
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };
 
 module.exports.updateUserInfo = (req, res, next) => {
@@ -52,8 +49,7 @@ module.exports.updateUserInfo = (req, res, next) => {
       throw new Error();
     })
     .then((user) => res.json({ user }))
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };
 
 module.exports.updateUserAvatar = (req, res, next) => {
@@ -68,8 +64,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       throw new Error();
     })
     .then((user) => res.json({ user }))
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };
 
 module.exports.login = (req, res, next) => {
@@ -91,8 +86,7 @@ module.exports.login = (req, res, next) => {
           _id: user._id,
         });
     })
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };
 
 module.exports.getCurrentUserInfo = (req, res, next) => {
@@ -101,6 +95,5 @@ module.exports.getCurrentUserInfo = (req, res, next) => {
   User.findById(_id)
     .orFail()
     .then((user) => res.json({ user }))
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };

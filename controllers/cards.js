@@ -5,8 +5,7 @@ const { ForbiddenError } = require('../errors/forbidden-error');
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.json({ cards }))
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -15,23 +14,28 @@ module.exports.createCard = (req, res, next) => {
 
   Card.create({ name, link, owner })
     .then((card) => res.status(201).json({ card }))
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };
 
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
 
-  Card.findByIdAndRemove(cardId)
+  Card.findById(cardId)
     .orFail()
-    // eslint-disable-next-line consistent-return
     .then((card) => {
-      if (userId !== card.owner) return Promise.reject(new ForbiddenError('Access denied'));
-      res.json({ card });
+      if (userId !== card.owner.toString()) {
+        throw new ForbiddenError('Access denied');
+      }
+
+      Card.findByIdAndRemove(cardId)
+        .orFail()
+        .then((cardToDel) => {
+          res.json({ cardToDel });
+        })
+        .catch(next);
     })
-    .catch((err) => { errorHeandler(err, res); })
-    .catch(next);
+    .catch((err) => { next(errorHeandler(err, res)); });
 };
 
 module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
@@ -41,8 +45,7 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
 )
   .orFail()
   .then((card) => res.json({ card }))
-  .catch((err) => { errorHeandler(err, res); })
-  .catch(next);
+  .catch((err) => { next(errorHeandler(err, res)); });
 
 module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.cardId,
@@ -51,5 +54,4 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
 )
   .orFail()
   .then((card) => res.json({ card }))
-  .catch((err) => { errorHeandler(err, res); })
-  .catch(next);
+  .catch((err) => { next(errorHeandler(err, res)); });
