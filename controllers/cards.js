@@ -4,6 +4,7 @@ const ForbiddenError = require('../errors/forbidden-error');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
+    .populate(['owner', 'likes'])
     .then((cards) => res.json({ cards }))
     .catch((err) => { next(errorHeandler(err)); });
 };
@@ -13,6 +14,7 @@ module.exports.createCard = (req, res, next) => {
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
+    .populate(['owner', 'likes'])
     .then((card) => res.status(201).json({ card }))
     .catch((err) => { next(errorHeandler(err)); });
 };
@@ -22,6 +24,7 @@ module.exports.deleteCard = (req, res, next) => {
   const userId = req.user._id;
 
   Card.findById(cardId)
+    .populate(['owner', 'likes'])
     .orFail()
     .then((card) => {
       if (userId !== card.owner.toString()) throw new ForbiddenError('Access denied');
@@ -39,6 +42,7 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
   { $addToSet: { likes: req.user._id } },
   { new: true },
 )
+  .populate(['owner', 'likes'])
   .orFail()
   .then((card) => res.json({ card }))
   .catch((err) => { next(errorHeandler(err)); });
@@ -48,6 +52,7 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   { $pull: { likes: req.user._id } },
   { new: true },
 )
+  .populate(['owner', 'likes'])
   .orFail()
   .then((card) => res.json({ card }))
   .catch((err) => { next(errorHeandler(err)); });
