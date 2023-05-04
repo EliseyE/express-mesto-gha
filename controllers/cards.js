@@ -1,6 +1,8 @@
 const Card = require('../models/card');
-const { errorHeandler } = require('../errors/errorHeandler');
-const ForbiddenError = require('../errors/forbidden-error');
+const {
+  errorHeandler,
+  ForbiddenError,
+} = require('../errors/index');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})

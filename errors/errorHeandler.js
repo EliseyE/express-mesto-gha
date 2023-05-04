@@ -1,6 +1,8 @@
-const BadRequestError = require('./bad-request-error');
-const NotFoundError = require('./not-found-error');
-const ConflictError = require('./conflict-error');
+const {
+  BadRequestError,
+  NotFoundError,
+  ConflictError,
+} = require('./index');
 
 module.exports.errorHeandler = (err) => {
   if (err.statusCode) {
