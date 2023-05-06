@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const { errorHeandler } = require('../errors/index');
+const errorHeandler = require('../errors/errorHeandler');
 const { generateToken } = require('../utils/token');
 
 module.exports.getUsers = (req, res, next) => {

@@ -1,10 +1,8 @@
-const {
-  BadRequestError,
-  NotFoundError,
-  ConflictError,
-} = require('./index');
+const BadRequestError = require('./bad-request-error');
+const NotFoundError = require('./not-found-error');
+const ConflictError = require('./conflict-error');
 
-module.exports.errorHeandler = (err) => {
+function errorHeandler(err) {
   if (err.statusCode) {
     return err;
   }
@@ -29,4 +27,6 @@ module.exports.errorHeandler = (err) => {
     default:
       return err;
   }
-};
+}
+
+module.exports = errorHeandler;
