@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const routes = require('./routes');
 const centralErrorUnit = require('./errors/centralErrorUnit');
@@ -21,7 +22,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
+app.use(requestLogger);
+
 app.use(routes);
+
+app.use(errorLogger);
 
 app.use(errors());
 app.use(centralErrorUnit);
